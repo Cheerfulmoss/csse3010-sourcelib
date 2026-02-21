@@ -49,6 +49,6 @@ if ! command -v JLinkExe >/dev/null 2>&1; then
 fi
 
 printf "%s\n" "${MISSING[@]}" >> "$INSTALLED_META"
-sort -u "$INSTALLED_META" -0 "$INSTALLED_META"
+sort -u "$INSTALLED_META" -o "$INSTALLED_META"
 
 echo "sourcelib install complete."
