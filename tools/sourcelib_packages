@@ -1,0 +1,6 @@
+gcc-arm-none-eabi
+gdb-arm-none-eabi
+libnewlib-arm-none-eabi
+gdb-multiarch
+python3-venv
+
