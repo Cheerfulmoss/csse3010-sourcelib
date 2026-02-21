@@ -3,4 +3,7 @@ gdb-arm-none-eabi
 libnewlib-arm-none-eabi
 gdb-multiarch
 python3-venv
-
+git
+gh
+build-essential
+curl
