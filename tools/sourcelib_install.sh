@@ -3,7 +3,7 @@ set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
 
-MANIFEST_FILE="sourcelib_packages.sh"
+MANIFEST_FILE="sourcelib_packages"
 INSTALLED_META=".sourcelib_installed"
 MISSING=()
 
