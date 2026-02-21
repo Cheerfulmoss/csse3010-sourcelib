@@ -18,9 +18,6 @@ install_if_missing gcc-arm-none-eabi
 install_if_missing gdb-arm-none-eabi
 install_if_missing libnewlib-arm-none-eabi
 install_if_missing gdb-multiarch
-install_if_missing screen
-install_if_missing wget
-install_if_missing gitg
 install_if_missing python3-venv
 
 # Create gdb symlink if needed
