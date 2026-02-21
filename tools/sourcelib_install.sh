@@ -13,6 +13,9 @@ apt-get update
 install_if_missing() {
     dpkg -s "$1" >/dev/null 2>&1 || apt-get install -y "$1"
 }
+install_if_missing apt-utils
+
+apt-get update
 
 install_if_missing gcc-arm-none-eabi
 install_if_missing gdb-arm-none-eabi
