@@ -3,7 +3,8 @@ set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
 
-MANIFEST_FILE="sourcelib_packages"
+MANIFEST_FILE="sourcelib_packages.sh"
+INSTALLED_META=".sourcelib_installed"
 MISSING=()
 
 if [ ! -f "$MANIFEST_FILE" ]; then
@@ -46,5 +47,8 @@ if ! command -v JLinkExe >/dev/null 2>&1; then
     echo "Warning: JLinkExe not found in PATH."
     echo "Mount or install SEGGER JLink manually."
 fi
+
+printf "%s\n" "${MISSING[@]}" >> "$INSTALLED_META"
+sort -u "$INSTALLED_META" -0 "$INSTALLED_META"
 
 echo "sourcelib install complete."
