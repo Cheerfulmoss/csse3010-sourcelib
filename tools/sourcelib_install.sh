@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
+
+MANIFEST_FILE="sourcelib_packages.sh"
+MISSING=()
+
+if [ ! -f "$MANIFEST_FILE" ]; then
+    echo "Sourcelib manifest missing: $MANIFEST_FILE"
+    exit 1
+fi
+
+mapfile -t PACKAGES < "$MANIFEST_FILE"
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "Please run as root (or via sudo)"
@@ -10,22 +20,25 @@ fi
 
 apt-get update
 
-install_if_missing() {
-    dpkg -s "$1" >/dev/null 2>&1 || apt-get install -y "$1"
-}
-install_if_missing apt-utils
+# Fix up any broken package dependencies and then install apt-utils to shut
+#     any complaining packages
+apt-get -f install -y
+apt-get install apt-utils
 
-apt-get update
+for pkg in "${PACKAGES[@]}"; do
+    dpkg -s "$pkg" &>/dev/null || MISSING+=("$pkg")
+done
 
-install_if_missing gcc-arm-none-eabi
-install_if_missing gdb-arm-none-eabi
-install_if_missing libnewlib-arm-none-eabi
-install_if_missing gdb-multiarch
-install_if_missing python3-venv
+if [ ${#MISSING[@]} -gt 0 ]; then
+    echo "Installing missing packages: ${MISSING[*]}"
+    apt-get install -y "${MISSING[@]}"
+else
+    echo "All required packages already installed"
+fi
 
 # Create gdb symlink if needed
-if [ -f /usr/bin/gdb-multiarch ] && [ ! -f /usr/local/bin/arm-none-eabi-gdb ]; then
-    ln -s /usr/bin/gdb-multiarch /usr/local/bin/arm-none-eabi-gdb
+if command -v gdb-multiarch >/dev/null 2>&1; then
+    ln -sf "$(command -v gdb-multiarch)" /usr/local/bin/arm-none-eabi-gdb
 fi
 
 # Check for JLink instead of installing it
